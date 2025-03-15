@@ -5,6 +5,7 @@ import ContestCard from "./components/ContestCard";
 import PlatformFilter from "./components/PlatformFilter";
 import { Toaster } from "react-hot-toast";
 import { CodeXml } from "lucide-react";
+import useDarkMode from "../src/hooks/useDarkMode.js";
 
 function App() {
   const {
@@ -17,6 +18,12 @@ function App() {
   } = useContests();
   const { bookmarks, toggleBookmark, isBookmarked } = useBookmarks();
   const [showBookmarks, setShowBookmarks] = useState(false);
+  const [showUpcomingContests,setShowUpcomingContests] = useState(true);
+  const [theme, toggleTheme] = useDarkMode();
+
+  // console.log('upcoming',upcomingContests);
+  // console.log('past ',pastContests)
+  
 
   if (loading) {
     return (
@@ -55,6 +62,12 @@ function App() {
       <div className="flex items-center justify-center gap-x-3 mb-8">
         <CodeXml className="w-16 h-16 text-blue-600" />
         <h1 className="text-6xl font-bold leading-none">Contest Tracker</h1>
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+        >
+          {theme === "dark" ? "Light" : "Dark"}
+        </button>
       </div>
 
       <div className="flex justify-center items-center mb-8">
@@ -106,9 +119,10 @@ function App() {
           ))}
         </div>
       ) : (
-        <>
+        <div className="">
+
           <div className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Upcoming Contests</h2>
+            <button className="text-2xl font-semibold mb-4">Upcoming Contests</button>
             {upcomingContests.map((contest) => (
               <ContestCard
                 key={contest.id}
@@ -117,6 +131,7 @@ function App() {
                 onToggleBookmark={toggleBookmark}
               />
             ))}
+            
           </div>
 
           <div>
@@ -132,7 +147,7 @@ function App() {
               />
             ))}
           </div>
-        </>
+        </div>
       )}
     </div>
   );
