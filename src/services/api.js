@@ -68,8 +68,7 @@ import axios from 'axios';
 // };
 
 
-// const CLIST_API = 'https://clist.by/api/v4/doc/';
-// const API_KEY = 'roykhushi:a02da41f127f8d2be997fb4ae99f211d20593217';
+
 
 // export const fetchClistContests = async () => {
 //   try {
