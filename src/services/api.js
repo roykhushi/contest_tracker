@@ -109,15 +109,16 @@ export const fetchClistContests = async () => {
       },
       params: {
         upcoming: true,
-        limit: 50,
+        limit: 200,
       },
     });
 
     // console.log('api resp',response.data);
+    console.log("api:",response.data.objects[0]);
     return response.data.objects.map(contest => ({
       id: `${contest.id}`,
       name: contest.event,
-      platform: contest.resource,
+      platform: contest.host,
       startTime: new Date(contest.start).getTime(),
       duration: contest.duration * 1000,
       url: contest.href,

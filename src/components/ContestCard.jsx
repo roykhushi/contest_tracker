@@ -8,7 +8,7 @@ export default function ContestCard({ contest, isBookmarked, onToggleBookmark, s
   const timeRemaining = formatDistanceToNow(startDate, { addSuffix: true });
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+    <div className="bg-white rounded-xl shadow-xl border-black p-4 mb-4">
       <div className="flex justify-between items-start">
         <div>
           <h3 className="text-lg font-semibold">{contest.name}</h3>

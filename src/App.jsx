@@ -5,7 +5,8 @@ import ContestCard from "./components/ContestCard";
 import PlatformFilter from "./components/PlatformFilter";
 import { Toaster } from "react-hot-toast";
 import { CodeXml } from "lucide-react";
-import useDarkMode from "../src/hooks/useDarkMode.js";
+// import useDarkMode from "../src/hooks/useDarkMode.js";
+import ThemeToggle from "./components/ThemeToggle.jsx";
 
 function App() {
   const {
@@ -18,12 +19,11 @@ function App() {
   } = useContests();
   const { bookmarks, toggleBookmark, isBookmarked } = useBookmarks();
   const [showBookmarks, setShowBookmarks] = useState(false);
-  const [showUpcomingContests,setShowUpcomingContests] = useState(true);
-  const [theme, toggleTheme] = useDarkMode();
+  // const [showUpcomingContests, setShowUpcomingContests] = useState(true);
+  // const [theme, toggleTheme] = useDarkMode();
 
   // console.log('upcoming',upcomingContests);
   // console.log('past ',pastContests)
-  
 
   if (loading) {
     return (
@@ -56,99 +56,105 @@ function App() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Toaster position="top-right" />
+    <div className="w-full px-4 py-8 dark:bg-[#1b1b1f]">
+      <div className="px-6">
+        <div className="mb-2 w-full">
+          <div className="flex justify-end">
+            <ThemeToggle />
+          </div>
+        </div>
 
-      <div className="flex items-center justify-center gap-x-3 mb-8">
-        <CodeXml className="w-16 h-16 text-blue-600" />
-        <h1 className="text-6xl font-bold leading-none">Contest Tracker</h1>
-        <button
-          onClick={toggleTheme}
-          className="p-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
-        >
-          {theme === "dark" ? "Light" : "Dark"}
-        </button>
-      </div>
+        <Toaster position="top-right" />
 
-      <div className="flex justify-center items-center mb-8">
-        <p className="font-semibold text-xl">
-          Stay ahead of the game with instant access to all upcoming contest
-          details—everything you need in one place!
-        </p>
-      </div>
+        <div className="flex items-center justify-center gap-x-3 mb-8">
+          <CodeXml className="w-16 h-16 text-blue-600" />
 
-      <div className="flex justify-end gap-4 mb-6">
-        <button
-          onClick={() => setShowBookmarks(false)}
-          className={`px-4 py-2 rounded ${
-            !showBookmarks ? "bg-blue-500 text-white" : "bg-gray-200"
-          }`}
-        >
-          All Contests
-        </button>
+          <div className="flex flex-col items-start">
+            <h1 className="text-6xl font-bold leading-none tracking-tighter dark:text-white">
+              Contest Tracker
+            </h1>
+            <div className="mt-2 h-2 w-56 bg-blue-400 rounded-md" />
+          </div>
+        </div>
 
-        <button
-          onClick={() => setShowBookmarks(true)}
-          className={`px-4 py-2 rounded ${
-            showBookmarks ? "bg-blue-500 text-white" : "bg-gray-200"
-          }`}
-        >
-          Bookmarked ({bookmarks.length})
-        </button>
-      </div>
+        <div className="flex justify-center items-center mb-8">
+          <p className="font-semibold text-xl dark:text-white">
+            Stay ahead of the game with instant access to all upcoming contest
+            details—everything you need in one place!
+          </p>
+        </div>
 
-      <div className="flex">
-        {!showBookmarks && (
-          <PlatformFilter
-            selectedPlatforms={selectedPlatforms}
-            onChange={setSelectedPlatforms}
-          />
+        <div className="flex justify-end gap-4 mb-6">
+          <button
+            onClick={() => setShowBookmarks(false)}
+            className={`px-4 py-2 rounded ${
+              !showBookmarks ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+          >
+            All Contests
+          </button>
+
+          <button
+            onClick={() => setShowBookmarks(true)}
+            className={`px-4 py-2 rounded ${
+              showBookmarks ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+          >
+            Bookmarked ({bookmarks.length})
+          </button>
+        </div>
+
+        <div className="flex">
+          {!showBookmarks && (
+            <PlatformFilter
+              selectedPlatforms={selectedPlatforms}
+              onChange={setSelectedPlatforms}
+            />
+          )}
+        </div>
+
+        {showBookmarks ? (
+          <div>
+            <h2 className="text-2xl font-semibold mb-4">Bookmarked Contests</h2>
+            {bookmarks.map((contest) => (
+              <ContestCard
+                key={contest.id}
+                contest={contest}
+                isBookmarked={isBookmarked(contest.id)}
+                onToggleBookmark={toggleBookmark}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="">
+            <div className="mb-8">
+              <h1 className="text-2xl font-semibold mb-4 dark:text-white">Upcoming Contests</h1>
+              {upcomingContests.map((contest) => (
+                <ContestCard
+                  key={contest.id}
+                  contest={contest}
+                  isBookmarked={isBookmarked(contest.id)}
+                  onToggleBookmark={toggleBookmark}
+                />
+              ))}
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-semibold mb-4">
+                Past Contests (Last Week)
+              </h2>
+              {pastContests.map((contest) => (
+                <ContestCard
+                  key={contest.id}
+                  contest={contest}
+                  isBookmarked={isBookmarked(contest.id)}
+                  onToggleBookmark={toggleBookmark}
+                />
+              ))}
+            </div>
+          </div>
         )}
       </div>
-
-      {showBookmarks ? (
-        <div>
-          <h2 className="text-2xl font-semibold mb-4">Bookmarked Contests</h2>
-          {bookmarks.map((contest) => (
-            <ContestCard
-              key={contest.id}
-              contest={contest}
-              isBookmarked={isBookmarked(contest.id)}
-              onToggleBookmark={toggleBookmark}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="">
-
-          <div className="mb-8">
-            <button className="text-2xl font-semibold mb-4">Upcoming Contests</button>
-            {upcomingContests.map((contest) => (
-              <ContestCard
-                key={contest.id}
-                contest={contest}
-                isBookmarked={isBookmarked(contest.id)}
-                onToggleBookmark={toggleBookmark}
-              />
-            ))}
-            
-          </div>
-
-          <div>
-            <h2 className="text-2xl font-semibold mb-4">
-              Past Contests (Last Week)
-            </h2>
-            {pastContests.map((contest) => (
-              <ContestCard
-                key={contest.id}
-                contest={contest}
-                isBookmarked={isBookmarked(contest.id)}
-                onToggleBookmark={toggleBookmark}
-              />
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

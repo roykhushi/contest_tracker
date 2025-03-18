@@ -76,7 +76,7 @@ export const useContests = () => {
       try {
         setLoading(true);
         const clistContests = await fetchClistContests();
-        console.log('set contests', clistContests);
+        // console.log('set contests', clistContests);
         setContests(clistContests);
       } catch (err) {
         setError('Failed to fetch contests');
@@ -90,16 +90,28 @@ export const useContests = () => {
 
   const now = Date.now();
   const oneWeekAgo = subWeeks(new Date(), 1).getTime();
-  console.log('Contest Platforms:', contests.map(c => c.platform));
+  // console.log('Contest Platforms:', contests.map(c => c.platform));
 
 
-  const upcomingContests = contests.filter(contest => contest.startTime > now);
+  // const upcomingContests = contests.filter(contest => contest.startTime > now);
+  // const upcomingContests = contests
+  // .filter(contest => contest.startTime > now)
+  // .sort((a, b) => a.startTime - b.startTime);
 
-  const filteredContests = contests.filter((contest) =>
-    contest.platform && selectedPlatforms.includes(contest.platform.toLowerCase())
-  );
-  
-  
+  // const filteredContests = contests
+  // .filter(contest => contest.startTime > now)
+  // .filter(contest => selectedPlatforms.includes(contest.platform))
+  // .sort((a, b) => a.startTime - b.startTime);
+
+
+  const allUpcomingContests = contests
+  .filter(contest => contest.startTime > now)
+  .sort((a, b) => a.startTime - b.startTime);
+
+  const upcomingContests = selectedPlatforms.length === 0
+    ? allUpcomingContests
+    : allUpcomingContests.filter(contest => selectedPlatforms.includes(contest.platform));
+
 
   const pastContests = contests.filter(contest =>
     contest.startTime >= oneWeekAgo && contest.startTime <= now
@@ -107,11 +119,9 @@ export const useContests = () => {
 
   return {
     upcomingContests,
-    filteredContests,
     pastContests,
     loading,
     error,
-    setContests,
     selectedPlatforms,
     setSelectedPlatforms,
   };
